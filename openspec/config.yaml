@@ -3,18 +3,102 @@ schema: spec-driven
 # Project context (optional)
 # This is shown to AI when creating artifacts.
 # Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+project_name: "Discofy"
+framework: "Flutter"
+version: "1.0.0"
+platforms: ["Web (PWA)", "iOS", "Android"]
+
+# --- PRODUCT STRATEGY ---
+product_specs:
+  goal: >
+    A specialized PWA for DJs to organize their music library. 
+    It synchronizes with the Discogs API and enriches data with 
+    BPM, musical keys, and custom tags for advanced filtering.
+  target_audience: "Vinyl and Digital DJs"
+  mvp_features:
+    - "OAuth 1.0a authentication with Discogs"
+    - "Library synchronization and local caching"
+    - "Manual and API-based BPM enrichment (Spotify/GetSongBPM)"
+    - "Custom multi-tagging system"
+    - "Real-time filtering by BPM range and tags"
+
+# --- TECHNICAL ARCHITECTURE ---
+architecture:
+  pattern: "Clean Architecture (Layered)"
+  layers:
+    - "Data: Repositories, Data Sources (Isar, Dio)"
+    - "Domain: Entities, Use Cases"
+    - "Presentation: UI Widgets, Riverpod Providers"
+  state_management: "Riverpod (Functional/Notifier approach)"
+  database: "Isar (NoSQL) - Browser-indexed storage for PWA"
+  networking: "Dio (with Interceptors for Discogs OAuth)"
+
+# --- DEVELOPMENT STANDARDS ---
+coding_style:
+  language: "Dart"
+  guidelines:
+    - "Follow official 'Effective Dart' naming conventions"
+    - "Enforce 'strict-raw-types' and 'avoid-dynamic'"
+    - "Prefer 'const' constructors for widget tree optimization"
+    - "Widget decomposition: Small, reusable, and single-responsibility"
+    - "Documentation: Triple-slash (///) comments for public members"
+
+git_conventions:
+  commit_style: "Conventional Commits"
+  commit_types: ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore"]
+  branching: "Feature-based (e.g., feature/bpm-filter)"
+
+error_handling:
+  strategy: "Result-based pattern (Success/Failure objects)"
+  logging: "Log events via 'logger' package, categorized by severity"
+  ui_feedback: "Contextual Snackbars for network errors and sync status"
+
+# --- DATA MODEL ---
+data_models:
+  - name: "VinylRecord"
+    fields:
+      - id: "int (autoIncrement)"
+      - discogs_id: "int (indexed)"
+      - title: "String"
+      - artist: "String"
+      - label: "String"
+      - ep_or_album: "String" # Only if applicable
+      - cover_url: "String"
+      - bpm: "double (indexed)"
+      - musical_key: "String (Camelot Notation)"
+      - tags: "List<String> (indexed)"
+      - date_added: "DateTime"
+
+# --- UI/UX SPECIFICATIONS ---
+design_system:
+  theme: "Deep Dark Mode (Club Optimized)"
+  colors:
+    primary: "#E91E63" # Vibrant Pink/Neon
+    background: "#121212"
+    surface: "#1E1E1E"
+  typography: "Google Fonts (Inter or Roboto Mono)"
+
+features:
+  - name: "Discogs Sync"
+    description: "Integration via OAuth 1.0a to synchronize and download the user's personal collection."
+    priority: "High"
+
+  - name: "BPM & Metadata Enrichment"
+    description: >
+      Automatic BPM retrieval through external APIs (Spotify/GetSongBPM) 
+      with the option for manual input and overrides.
+    priority: "High"
+
+  - name: "Tagging System"
+    description: "Multi-tagging support for tracks to assign custom descriptors (e.g., #warmup, #peaktime)."
+    priority: "Medium"
+
+  - name: "Advanced Filtering"
+    description: "Real-time filtering based on BPM ranges and multiple tag selection."
+    priority: "High"
+
+# Per-artifact rules
+rules:
+     proposal:
+      - Keep proposals under 500 words
